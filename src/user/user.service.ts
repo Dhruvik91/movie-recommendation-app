@@ -26,12 +26,16 @@ export class UserService {
   }
 
   // find specific user
-  findOne(username: string): Promise<User> {
-    return this.userRepository.findOneBy({ username });
+  findOne(id: string): Promise<User> {
+    return this.userRepository.findOneBy({ id: id });
   }
 
+  findOneUser(username: string): Promise<User> {
+    return this.userRepository.findOneBy({ username });
+  }
+  
   // update user
-  update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const user: User = new User();
     user.username = updateUserDto.username;
     user.password = updateUserDto.password;
@@ -41,12 +45,7 @@ export class UserService {
   }
 
   // delete user
-  remove(id: number) {
+  remove(id: string) {
     return this.userRepository.delete(id);
   }
-
-  //maximum id 
-  maximum(id : any) {
-    return this.userRepository.maximum(id);
-}
 }

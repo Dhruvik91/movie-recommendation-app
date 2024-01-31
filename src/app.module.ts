@@ -2,10 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-
+import { MovieModule } from './movie/movie.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -14,11 +13,11 @@ import { AuthModule } from './auth/auth.module';
       port: 5432,
       username: 'postgres',
       password: '12345',
-      database: 'charApp',
+      database: 'movieapp',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    UserModule, AuthModule
+    UserModule, AuthModule, MovieModule
   ],
   controllers: [AppController],
   providers: [AppService],
