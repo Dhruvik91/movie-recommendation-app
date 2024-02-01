@@ -11,6 +11,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { DeleteResult } from 'typeorm';
 
 @Controller('user')
 export class UserController {
@@ -41,7 +42,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<DeleteResult> {
     return this.userService.remove(id);
   }
 }

@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { MovieModule } from './movie/movie.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggerInterceptor } from './interceptors/logger.interceptors';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -17,9 +19,14 @@ import { MovieModule } from './movie/movie.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    UserModule, AuthModule, MovieModule
+    UserModule,
+    AuthModule,
+    MovieModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    { provide: APP_INTERCEPTOR, useClass: LoggerInterceptor },
+    AppService,
+  ],
 })
 export class AppModule {}
