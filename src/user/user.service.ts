@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 
@@ -12,41 +12,49 @@ export class UserService {
   ) {}
 
   // create user
-  create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<any> {
+    const oldUser: User = await this.userRepository.findOneBy({
+      email: createUserDto.email,
+    });
+
+    if (oldUser) {
+      return {
+        message: 'User Already Exists!!!'
+      };
+    }
     const user: User = new User();
     user.username = createUserDto.username;
     user.email = createUserDto.email;
     user.password = createUserDto.password;
-    return this.userRepository.save(user);
+    return await this.userRepository.save(user);
   }
 
   // get all users
-  findAll(): Promise<User[]> {
-    return this.userRepository.find();
+  async findAll(): Promise<User[]> {
+    return await this.userRepository.find();
   }
 
   // find specific user
-  findOne(username: string): Promise<User> {
-    return this.userRepository.findOneBy({ username });
+  async findOne(id: string): Promise<User> {
+    return await this.userRepository.findOneBy({ id: id });
+  }
+
+  async findOneUser(username: string): Promise<User> {
+    return await this.userRepository.findOneBy({ username });
   }
 
   // update user
-  update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const user: User = new User();
     user.username = updateUserDto.username;
     user.password = updateUserDto.password;
     user.email = updateUserDto.email;
     user.id = id;
-    return this.userRepository.save(user);
+    return await this.userRepository.save(user);
   }
 
   // delete user
-  remove(id: number) {
-    return this.userRepository.delete(id);
+  async remove(id: string): Promise<DeleteResult> {
+    return await this.userRepository.delete(id);
   }
-
-  //maximum id 
-  maximum(id : any) {
-    return this.userRepository.maximum(id);
-}
 }
